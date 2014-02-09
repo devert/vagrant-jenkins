@@ -1,0 +1,9 @@
+*.sublime-project
+*.sublime-workspace
+*.lock
+*.log
+*.DS_Store
+.vagrant
+
+cookbooks
+tmp

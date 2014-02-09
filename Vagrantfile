@@ -10,29 +10,28 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise32"
+  config.vm.box = "opscodePrecise32"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04-i386_chef-provisionerless.box"
+
+  # This can be set to the host name you wish the guest machine to have.
+  config.vm.hostname = "jenkins-box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # config.vm.network :forwarded_port, guest: 80, host: 8080
+  # accessing "localhost:5000" will access port 80 on the guest machine.
+  config.vm.network :forwarded_port, guest: 80, host: 5000
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network :public_network
-
-  # If true, then any SSH connections made will enable agent forwarding.
-  # Default value: false
-  # config.ssh.forward_agent = true
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -51,12 +50,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.librarian_chef.cheffile_dir = "chef"
+  # Install the latest version of Chef on the VM using the vagrant-omnibus plugin
+  config.omnibus.chef_version = :latest
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "./chef/cookbooks"
+
+    chef.cookbooks_path = ["cookbooks"]
+    chef.add_recipe "apt"
+    chef.add_recipe "git"
+    chef.add_recipe "jenkins::server"
+
+    chef.json = {
+      :git => {
+        :prefix => "/usr/local"
+      }
+    }
   end
 end
