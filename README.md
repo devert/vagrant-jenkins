@@ -1,5 +1,5 @@
 # Vagrant Jenkins
-### (Work in Progress - Not Fully Functional)
+### (Work in Progress)
 
 A Jenkins CI box, utilizing a Vagrant VM (default: Ubuntu 12.04 Precise Pangolin 32-bit) provisioned with Chef Solo.
 
@@ -15,9 +15,11 @@ You must have the following dependencies installed to run this VM.
 
 ## Chef Cookbooks included:
 
+This list does not include the dependencies of these cookbooks.
+
 * [apt](https://github.com/opscode-cookbooks/git)
 * [git](https://github.com/opscode-cookbooks/git)
-* [jenkins](https://github.com/opscode-cookbooks/jenkins)
+* [java](https://github.com/opscode-cookbooks/java)
 
 ## Usage
 
